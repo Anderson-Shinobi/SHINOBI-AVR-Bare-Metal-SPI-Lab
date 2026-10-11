@@ -77,7 +77,9 @@ The latest [SPCR readback and GPIO SCK experiment](diagnostics/cpol_register_gpi
 - **GPIO positive control PASS:** analyzer saw SCK HIGH in all nine SPI-disabled GPIO windows.
 - **SPI clock/loopback PASS:** 1 MHz SCK, 9 transfers, all 27 MOSI/MISO bytes matched.
 - **CPOL=1 idle discrepancy reproduced:** SCK LOW in all eight SPI-enabled mode-2/3 idle windows, rather than the nominal HIGH.
-- **Important limit:** the VCD contains *no UART serial-monitor text*. A screenshot or copy of the `READBACK_SPCR` fields is still required to confirm the values read from the live simulated register. Do not label a simulator bug or full CPOL/CPHA compliance yet.
+- **Serial evidence now supplied:** [SPCR readback and PINB report](evidence/SPCR_SERIAL_READBACK_VALIDATION.md) documents 124 matching requested/read-back SPCR values (31 cycles of modes 0–3), GPIO_SCK HIGH and SPI_IDLE_PRE/POST LOW in every record, plus 372 matching loopback bytes. The [original Serial Monitor log](evidence/spcr_gpio_serial_monitor_original.md) is archived with SHA-256 integrity checks and [automated regression tests](tests/test_spcr_serial_log.py).
+
+The Serial Monitor log is longer than the third VCD (124 transactions versus nine), and the log has no timestamps. The two captures are mutually consistent but cannot be matched one-for-one. Readback CPOL=1 with idle SCK LOW is a repeatable simulated discrepancy; **its cause remains open**, and full four-mode SPI timing has **not** been established.
 
 ## Measurement acceptance criteria
 
