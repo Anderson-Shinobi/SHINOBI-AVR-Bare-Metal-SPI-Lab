@@ -2,7 +2,7 @@
 
 **From Physics to Firmware | Arduino Uno R3 / ATmega328P | MIT License**
 
-> **Status:** AVR-GCC build and Wokwi VCD measurement completed. **PARTIAL PASS:** 1 MHz clock and 33 loopback bytes verified; CPOL=1 idle-level behavior remains an open investigation. Physical Arduino Uno has not been tested.
+> **Status:** AVR-GCC build and two Wokwi VCD investigations completed. **PARTIAL PASS:** 1 MHz clock and loopback data validated in simulation. **OPEN:** CPOL=1 idle clock remains LOW in both captures, contrary to expected HIGH. Physical Arduino Uno has not been tested.
 
 This is an **independent repository** linked from the [SHINOBI Engineering portfolio](https://anderson-shinobi.github.io/). The firmware uses AVR peripheral registers directly; `setup()` and `loop()` are invoked by Wokwi's standard Arduino start-up scaffold. No `SPI.h`, `Wire.h`, `Serial`, or Arduino high-level pin APIs are used.
 
@@ -42,6 +42,18 @@ The original VCD identified an **open CPOL=1 idle-level anomaly** in modes 2 and
 - [Wokwi analyzer circuit with mode and idle markers](diagnostics/cpol_probe/diagram.json)
 
 Use a **new Wokwi project**, not the saved baseline simulation. It adds separate analyzer channels for two mode bits and an idle-window marker, and sends three SPI bytes without interleaved UART output while chip select is asserted. Its own AVR compilation is checked in CI. **Do not mark the anomaly resolved until a new VCD demonstrates it.**
+
+## CPOL idle-window diagnostic — second VCD recorded
+
+The [isolated CPOL diagnostic](diagnostics/cpol_probe/README.md) was executed in Wokwi and a **9.40-second VCD capture** was decoded.
+
+- [Second CPOL diagnostic report](evidence/CPOL_IDLE_PROBE_VALIDATION.md)
+- [Original CPOL diagnostic VCD](evidence/shinobi-spi-cpol-probe-2026-10-11.vcd)
+- **PASS:** 1 MHz median SCK, 7 complete transactions, 21 matching MOSI/MISO bytes.
+- **REPRODUCED ANOMALY:** in **6 idle windows with nominal CPOL=1**, SCK remained **LOW**, not the expected HIGH. The mode marker and idle marker lines confirm which mode and window were observed.
+- **OPEN:** full CPOL/CPHA electrical/protocol qualification; origin of the Wokwi behavior is not established. Physical hardware has not been tested.
+
+The original firmware and original Wokwi simulation remain unchanged.
 
 ## Measurement acceptance criteria
 
