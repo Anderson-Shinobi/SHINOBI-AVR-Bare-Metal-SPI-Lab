@@ -56,20 +56,22 @@ Each yielded **A5 3C 5A** on both MOSI and MISO. The two lines are explicitly wi
 
 The first burst of some CPHA=1 transfers includes an extra or zero-time SCK boundary transition in the VCD. Do not claim CPHA timing compliance from this loopback alone.
 
-## Readback is **not present in this VCD**
+## Serial Monitor readback — **now received and independently archived**
 
-The firmware prints `REQUESTED_SPCR`, `READBACK_SPCR`, `READBACK_CPOL`, `READBACK_CPHA`, `GPIO_SCK`, `SPI_IDLE_PRE`, and `SPI_IDLE_POST` through **UART Serial Monitor**. A standard logic-analyzer VCD only contains the eight wired digital channels and **does not include those UART messages**. Therefore, the actual values read from SPCR/PINB in the running simulation **cannot be asserted from this file**.
+**Important:** the eight-channel VCD itself does **not** contain any UART messages. Since this original VCD report was prepared, the author provided a separate [full Serial Monitor log](spcr_gpio_serial_monitor_original.md), analyzed in the [companion register-readback report](SPCR_SERIAL_READBACK_VALIDATION.md).
 
-Based on the committed firmware source (a **software expectation**, not observed UART evidence), the expected `SPCR` byte is:
+All **124 logged transactions** (31 repetitions of modes 0–3) report `REQUESTED_SPCR == READBACK_SPCR`:
 
-| Mode | Expected SPCR | CPOL | CPHA |
-|---:|---|---:|---:|
-| 0 | `0x51` | 0 | 0 |
-| 1 | `0x55` | 0 | 1 |
-| 2 | `0x59` | 1 | 0 |
-| 3 | `0x5D` | 1 | 1 |
+| Mode | Requested SPCR | Readback SPCR | CPOL | CPHA |
+|---:|---|---|---:|---:|
+| 0 | `0x51` | `0x51` | 0 | 0 |
+| 1 | `0x55` | `0x55` | 0 | 1 |
+| 2 | `0x59` | `0x59` | 1 | 0 |
+| 3 | `0x5D` | `0x5D` | 1 | 1 |
 
-**Next required evidence:** capture a screenshot or copy the Wokwi Serial Monitor lines for each mode, including `REQUESTED_SPCR` and `READBACK_SPCR`. If they agree and CPOL=1 is read back while SCK remains LOW, the SPI peripheral/pin model becomes a stronger investigative target. Still avoid declaring a simulator defect without corroborating physical or independent simulation evidence.
+Every mode record has `GPIO_SCK=1`, `SPI_IDLE_PRE=0` and `SPI_IDLE_POST=0`; all **372 loopback bytes** passed. The CPU-side SPCR readback strengthens the hypothesis that **simulated peripheral-to-pin behavior** should be investigated, since the register image contains CPOL=1 but the pin sample and analyzer show LOW.
+
+**Timing limitation:** the serial log contains many more repetitions than this 9-transfer VCD and no timestamps. It cannot be correlated transaction-by-transaction with the VCD. The suspected simulator/peripheral cause remains a **hypothesis**, not a confirmed defect.
 
 ## Reproduction
 
