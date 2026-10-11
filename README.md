@@ -2,7 +2,7 @@
 
 **From Physics to Firmware | Arduino Uno R3 / ATmega328P | MIT License**
 
-> **Status:** AVR-GCC compilation and structural CI passed. A public Wokwi project is available, but its SPI signaling and timing still require independent VCD measurement; physical hardware remains untested.
+> **Status:** AVR-GCC build and Wokwi VCD measurement completed. **PARTIAL PASS:** 1 MHz clock and 33 loopback bytes verified; CPOL=1 idle-level behavior remains an open investigation. Physical Arduino Uno has not been tested.
 
 This is an **independent repository** linked from the [SHINOBI Engineering portfolio](https://anderson-shinobi.github.io/). The firmware uses AVR peripheral registers directly; `setup()` and `loop()` are invoked by Wokwi's standard Arduino start-up scaffold. No `SPI.h`, `Wire.h`, `Serial`, or Arduino high-level pin APIs are used.
 
@@ -23,6 +23,15 @@ Hardware SPI master; SPCR/SPSR/SPDR; 1 MHz at 16 MHz MCU; modes 0–3; D11 MOSI�
 Alternatively, open a [new Arduino Uno editor](https://wokwi.com/projects/new/arduino-uno) and import the versioned `sketch.ino` and `diagram.json` from this repository. A saved Wokwi project is independently editable, so use GitHub as the reference source for controlled revisions.
 
 Expected UART: SPI mode 0/1/2/3 and three LOOPBACK_PASS reports per mode for A5, 3C and 5A. Loopback is NOT a slave compatibility test. Logic analyzer D0=SCK, D1=MOSI, D2=MISO, D3=SS; attach GND.
+
+## First Wokwi measurement — original VCD
+
+- [Experimental report: SPI clock, loopback and CPOL observation](evidence/VCD_VALIDATION.md)
+- [Original 12.30-second VCD capture](evidence/shinobi-spi-loopback.vcd) — SHA-256 recorded in report.
+- [Captured data table](evidence/measurements.csv)
+- [Automated VCD regression test](tests/test_spi_capture.py) executed in GitHub Actions.
+- **Measured:** SCK 1 MHz, HIGH/LOW 500 ns, 11 SS-low transactions, 33 matching MOSI/MISO bytes (`A5 3C 5A`).
+- **Open anomaly:** mode-2/3 CPOL expects SCK idle HIGH, but the capture shows SCK LOW immediately before SS assertion. Do not claim full phase/polarity validation yet.
 
 ## Measurement acceptance criteria
 
