@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "author": "SHINOBI Engineering",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "wokwi-arduino-uno",
+      "id": "uno",
+      "top": 0,
+      "left": 0,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-logic-analyzer",
+      "id": "logic1",
+      "top": 0,
+      "left": 380,
+      "attrs": {
+        "channelNames": "SCK,MOSI,MISO,SS,D4,D5,D6,D7",
+        "bufferSize": "100000",
+        "filename": "shinobi-spi-loopback"
+      }
+    }
+  ],
+  "connections": [
+    [
+      "uno:11",
+      "uno:12",
+      "green",
+      []
+    ],
+    [
+      "uno:13",
+      "logic1:D0",
+      "yellow",
+      []
+    ],
+    [
+      "uno:11",
+      "logic1:D1",
+      "green",
+      []
+    ],
+    [
+      "uno:12",
+      "logic1:D2",
+      "blue",
+      []
+    ],
+    [
+      "uno:10",
+      "logic1:D3",
+      "orange",
+      []
+    ],
+    [
+      "uno:GND.2",
+      "logic1:GND",
+      "black",
+      []
+    ]
+  ],
+  "serialMonitor": {
+    "display": "auto",
+    "newline": "lf"
+  }
+}

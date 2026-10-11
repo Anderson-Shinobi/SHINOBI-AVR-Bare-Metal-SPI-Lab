@@ -1,0 +1,17 @@
+name: Verify AVR firmware and Wokwi circuit
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  avr-build-and-structure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install AVR compiler
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends gcc-avr avr-libc
+      - name: Compile register-level firmware
+        run: avr-g++ -std=gnu++11 -Os -Wall -Wextra -Werror -mmcu=atmega328p -DF_CPU=16000000UL -x c++ -c sketch.ino -o /tmp/shinobi-lab.o
+      - name: Validate JSON, topology and register invariants
+        run: python3 -m unittest discover -s tests -v
