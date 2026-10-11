@@ -54,7 +54,7 @@ def decode_capture():
         end, following = ss[i + 1]
         assert following == 1
         edges = [(t, v) for t, v in clock if start <= t < end]
-        if not edges:  # First initial SS-low region has no SCK.
+        if len(edges) < 8:  # Initial SS-low snapshot has one SCK=0 at t=0, not a transfer.
             continue
         bursts = []
         for t, v in edges:
