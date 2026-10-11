@@ -15,5 +15,7 @@ jobs:
         run: avr-g++ -std=gnu++11 -Os -Wall -Wextra -Werror -mmcu=atmega328p -DF_CPU=16000000UL -x c++ -c sketch.ino -o /tmp/shinobi-lab.o
       - name: Compile controlled CPOL diagnostic
         run: avr-g++ -std=gnu++11 -Os -Wall -Wextra -Werror -mmcu=atmega328p -DF_CPU=16000000UL -x c++ -c diagnostics/cpol_probe/sketch.ino -o /tmp/shinobi-cpol-probe.o
+      - name: Compile SPCR readback and GPIO SCK discriminator
+        run: avr-g++ -std=gnu++11 -Os -Wall -Wextra -Werror -mmcu=atmega328p -DF_CPU=16000000UL -x c++ -c diagnostics/cpol_register_gpio_probe/sketch.ino -o /tmp/shinobi-spcr-gpio-probe.o
       - name: Validate JSON, topology and register invariants
         run: python3 -m unittest discover -s tests -v
