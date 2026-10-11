@@ -13,5 +13,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y --no-install-recommends gcc-avr avr-libc
       - name: Compile register-level firmware
         run: avr-g++ -std=gnu++11 -Os -Wall -Wextra -Werror -mmcu=atmega328p -DF_CPU=16000000UL -x c++ -c sketch.ino -o /tmp/shinobi-lab.o
+      - name: Compile controlled CPOL diagnostic
+        run: avr-g++ -std=gnu++11 -Os -Wall -Wextra -Werror -mmcu=atmega328p -DF_CPU=16000000UL -x c++ -c diagnostics/cpol_probe/sketch.ino -o /tmp/shinobi-cpol-probe.o
       - name: Validate JSON, topology and register invariants
         run: python3 -m unittest discover -s tests -v
