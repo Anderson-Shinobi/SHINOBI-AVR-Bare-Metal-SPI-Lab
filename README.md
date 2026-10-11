@@ -33,6 +33,16 @@ Expected UART: SPI mode 0/1/2/3 and three LOOPBACK_PASS reports per mode for A5,
 - **Measured:** SCK 1 MHz, HIGH/LOW 500 ns, 11 SS-low transactions, 33 matching MOSI/MISO bytes (`A5 3C 5A`).
 - **Open anomaly:** mode-2/3 CPOL expects SCK idle HIGH, but the capture shows SCK LOW immediately before SS assertion. Do not claim full phase/polarity validation yet.
 
+## CPOL diagnostic (follow-up experiment)
+
+The original VCD identified an **open CPOL=1 idle-level anomaly** in modes 2 and 3. The baseline firmware remains unchanged.
+
+- [Diagnostic overview and Wokwi instructions](diagnostics/cpol_probe/README.md)
+- [Alternate diagnostic firmware](diagnostics/cpol_probe/sketch.ino)
+- [Wokwi analyzer circuit with mode and idle markers](diagnostics/cpol_probe/diagram.json)
+
+Use a **new Wokwi project**, not the saved baseline simulation. It adds separate analyzer channels for two mode bits and an idle-window marker, and sends three SPI bytes without interleaved UART output while chip select is asserted. Its own AVR compilation is checked in CI. **Do not mark the anomaly resolved until a new VCD demonstrates it.**
+
 ## Measurement acceptance criteria
 
 Check fSCK≈1 MHz, all CPOL/CPHA modes, SS LOW during burst, sampled MOSI and MISO matching. Save VCD only after simulator Stop.
