@@ -2,7 +2,7 @@
 
 **From Physics to Firmware | Arduino Uno R3 / ATmega328P | MIT License**
 
-> **Status:** implementation prepared and local structural checks performed. AVR-GCC build on GitHub Actions and execution/measurement in Wokwi must be checked before claiming the protocol was validated.
+> **Status:** AVR-GCC compilation and structural CI passed. A public Wokwi project is available, but its SPI signaling and timing still require independent VCD measurement; physical hardware remains untested.
 
 This is an **independent repository** linked from the [SHINOBI Engineering portfolio](https://anderson-shinobi.github.io/). The firmware uses AVR peripheral registers directly; `setup()` and `loop()` are invoked by Wokwi's standard Arduino start-up scaffold. No `SPI.h`, `Wire.h`, `Serial`, or Arduino high-level pin APIs are used.
 
@@ -12,11 +12,15 @@ Hardware SPI master; SPCR/SPSR/SPDR; 1 MHz at 16 MHz MCU; modes 0–3; D11 MOSI�
 
 ## Run in Wokwi
 
-1. Open [Wokwi Arduino Uno](https://wokwi.com/projects/new/arduino-uno).
-2. Replace **sketch.ino** and **diagram.json** in that project with the same files from this repository.
-3. Start the simulation; inspect the serial monitor and the logic analyzer.
-4. Stop and download the **VCD** capture. Send the VCD for quantitative timing and protocol decoding.
-5. Keep captured, measured and calculated results separate in the report.
+**[▶ Open the saved SPI Bare-Metal lab in Wokwi](https://wokwi.com/projects/477544744412189697)**
+
+1. Open the saved project in Wokwi, then start the simulation.
+2. Inspect the UART messages and analyzer channels.
+3. After allowing the four modes to run, press **Stop** to download the **VCD** capture.
+4. Analyze SCK frequency, CPOL/CPHA, MOSI, MISO and SS from the captured transitions.
+5. Compare measurement with nominal values; do not treat UART `LOOPBACK_PASS` alone as evidence of verified timing.
+
+Alternatively, open a [new Arduino Uno editor](https://wokwi.com/projects/new/arduino-uno) and import the versioned `sketch.ino` and `diagram.json` from this repository. A saved Wokwi project is independently editable, so use GitHub as the reference source for controlled revisions.
 
 Expected UART: SPI mode 0/1/2/3 and three LOOPBACK_PASS reports per mode for A5, 3C and 5A. Loopback is NOT a slave compatibility test. Logic analyzer D0=SCK, D1=MOSI, D2=MISO, D3=SS; attach GND.
 
