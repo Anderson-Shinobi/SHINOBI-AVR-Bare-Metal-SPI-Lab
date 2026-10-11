@@ -67,6 +67,18 @@ A [third independent diagnostic](diagnostics/cpol_register_gpio_probe/README.md)
 
 **Status:** implementation awaiting new Wokwi execution/VCD. The original `sketch.ino`, original `diagram.json`, and Wokwi project URL remain unchanged.
 
+## Diagnostic 03 — SPCR/GPIO discriminator VCD captured
+
+The latest [SPCR readback and GPIO SCK experiment](diagnostics/cpol_register_gpio_probe/README.md) produced the third independent SPI VCD capture.
+
+- [Third experimental report: positive GPIO control vs SPI idle](evidence/SPCR_GPIO_DIAGNOSTIC_VALIDATION.md)
+- [Original SPCR/GPIO VCD capture](evidence/shinobi-spi-spcr-gpio-probe-2026-10-11.vcd)
+- [Reproducible VCD regression tests](tests/test_spcr_gpio_vcd.py)
+- **GPIO positive control PASS:** analyzer saw SCK HIGH in all nine SPI-disabled GPIO windows.
+- **SPI clock/loopback PASS:** 1 MHz SCK, 9 transfers, all 27 MOSI/MISO bytes matched.
+- **CPOL=1 idle discrepancy reproduced:** SCK LOW in all eight SPI-enabled mode-2/3 idle windows, rather than the nominal HIGH.
+- **Important limit:** the VCD contains *no UART serial-monitor text*. A screenshot or copy of the `READBACK_SPCR` fields is still required to confirm the values read from the live simulated register. Do not label a simulator bug or full CPOL/CPHA compliance yet.
+
 ## Measurement acceptance criteria
 
 Check fSCK≈1 MHz, all CPOL/CPHA modes, SS LOW during burst, sampled MOSI and MISO matching. Save VCD only after simulator Stop.
