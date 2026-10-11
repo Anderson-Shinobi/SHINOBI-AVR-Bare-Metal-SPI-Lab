@@ -19,7 +19,7 @@ class TestCpolDiagnostic(unittest.TestCase):
     def test_register_level_and_phase_windows(self):
         for token in ("SPCR", "SPSR", "SPDR", "CPOL", "CPHA",
                       "PORTD7", "PORTB0", "PORTB1", "PORTB2",
-                      "PORTB5", "_delay_ms(700)", "_delay_ms(350)",
+                      "DDB5", "_delay_ms(700)", "_delay_ms(350)",
                       "exchange(tx_bytes[i], received[i])"):
             self.assertIn(token, self.source)
         self.assertIn('PORTB |= _BV(PORTB2); // SS HIGH before UART output.', self.source)
