@@ -55,6 +55,18 @@ The [isolated CPOL diagnostic](diagnostics/cpol_probe/README.md) was executed in
 
 The original firmware and original Wokwi simulation remain unchanged.
 
+## Diagnostic 03 — read back SPCR and verify SCK GPIO HIGH
+
+The prior two captures reproduced an unexpected **SCK LOW for CPOL=1**. We have not attributed the cause to firmware or to the simulator.
+
+A [third independent diagnostic](diagnostics/cpol_register_gpio_probe/README.md) now tests the same analyzer path in **two deliberately different conditions**: SPI disabled with SCK/D13 driven HIGH as GPIO, followed by SPI enabled with a documented `SPCR` CPOL/CPHA register readback. Its diagnostic source and circuit are isolated:
+
+- [Diagnostic 03 firmware](diagnostics/cpol_register_gpio_probe/sketch.ino)
+- [Wokwi circuit](diagnostics/cpol_register_gpio_probe/diagram.json)
+- [Setup, markers, discriminator matrix](diagnostics/cpol_register_gpio_probe/README.md)
+
+**Status:** implementation awaiting new Wokwi execution/VCD. The original `sketch.ino`, original `diagram.json`, and Wokwi project URL remain unchanged.
+
 ## Measurement acceptance criteria
 
 Check fSCK≈1 MHz, all CPOL/CPHA modes, SS LOW during burst, sampled MOSI and MISO matching. Save VCD only after simulator Stop.
